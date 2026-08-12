@@ -3,137 +3,136 @@
 <div align="center">
 
 # PresenceX
-### Presence, Not Clicks.
+### AI-Powered Multi-Face Attendance & Real-World CCTV Recognition Engine
 
 [![Framework: Next.js](https://img.shields.io/badge/Framework-Next.js%2015-blue?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![Language: TypeScript](https://img.shields.io/badge/Language-TypeScript-blue?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Aesthetic: Premium CSS](https://img.shields.io/badge/Styling-Premium%20Vanilla%20CSS-purple?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![Backend: FastAPI](https://img.shields.io/badge/Backend-FastAPI%20%26%20Python-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Biometrics: ArcFace 512D](https://img.shields.io/badge/Biometrics-ArcFace%20512D%20%26%20RetinaFace-orange?style=for-the-badge)]()
+[![Liveness: Dual--Layer PAD](https://img.shields.io/badge/Liveness-Dual--Layer%20PAD-success?style=for-the-badge)]()
 [![Build Status: Passing](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge)]()
 
-**PresenceX** is a premier, modern agency platform delivering end-to-end digital solutions tailored to help businesses scale and dominate online. From high-fidelity UI/UX design to modern web architectures, we build immersive digital experiences.
+**PresenceX** is an enterprise-grade AI face-recognition attendance platform designed specifically for institutional and classroom environments. Engineered to excel on cheap 2MP analog/IP CCTV cameras, poor illumination, and long distances, it combines **Dual-Layer Anti-Spoofing**, **Symmetric CLAHE Lighting Normalization**, and **Multi-Frame Consensus Aggregation**.
 
-[Explore Platform](#-key-features) • [Tech Stack](#-technology-stack) • [Getting Started](#%EF%B8%8F-getting-started) • [Deployment](#-deployment)
+[Live Demo](#-getting-started) • [Biometric Architecture](#-biometric-architecture) • [CCTV Hardening](#-real-world-cctv-hardening-part-6) • [Anti-Spoofing](#-dual-layer-presentation-attack-detection) • [API Reference](#-api-endpoints)
 
 ---
 
 </div>
 
-## ✨ End-to-End Digital Solutions
+## 🧠 Biometric Architecture
 
-PresenceX delivers customized digital products that combine beautiful form with high-performance function. We specialize in turning vision into high-converting digital assets.
+PresenceX decouples **Liveness Verification** from **Identity Vector Matching**, ensuring that no attendance record is confirmed without first proving physical live presence in the current frame.
 
 ```mermaid
 graph TD
-    A[PresenceX Digital Strategy] --> B[UI/UX & Branding]
-    A --> C[High-Performance Development]
-    A --> D[Digital Marketing & SEO]
-    B --> E[Harmonious Identity]
-    C --> F[Vibrant, Fast & Fluid Web Apps]
-    D --> G[Tailored Growth & Online Discovery]
+    A[Camera Frame Input] --> B[Optical PAD Fast Checks <5ms]
+    B -- Screen / Bezel Detected --> S[🛑 Reject: Screen Replay Attack]
+    B -- Clean Optical Pass --> C[RetinaFace 5-Point Landmark Extraction]
+    C --> D[Neural FASNet Liveness Model]
+    D -- FASNet Spoof Detected --> S2[🛑 Reject: Presentation Attack]
+    D -- Real Live Face --> E[Face Quality Scorer & Floor Gate]
+    E -- Width < 20px / Blur < 8.0 --> R[🛑 Reject: Quality Too Low]
+    E -- Gate Passed --> F[Symmetric CLAHE LAB Lighting Normalizer]
+    F --> G{Quality Tier}
+    G -- Medium / Low --> H[Face Structural Prior Restoration]
+    G -- High --> I[Direct 112x112 Aligned Crop]
+    H --> J[ArcFace 512-D Embedding Extraction]
+    I --> J
+    J --> K[Multi-Embedding Minimum Distance Vector Search]
+    K --> L{Confidence-Adjusted Threshold}
+    L -- Distance <= Threshold --> M[✅ Match Confirmed & Attendance Marked]
+    L -- Distance > Threshold --> U[❓ Unknown Face]
 ```
 
 ---
 
-## 🚀 Key Features
+## 🛡️ Dual-Layer Presentation Attack Detection (PAD)
 
-*   **Premium Visual Aesthetics**: Sleek dark modes, glassmorphism, responsive animations, and harmonized color palettes tailored to catch the eye instantly.
-*   **Fluid Motion Design**: Rich and interactive micro-animations powered by GSAP and custom scroll-driven reveals to elevate user engagement.
-*   **Modern Typography & Layouts**: Built using modern fonts (Inter, Outfit) and cutting-edge CSS layouts (`:has()`, container queries, grid layouts) for a responsive and alive feel.
-*   **End-to-End Agency Focus**: Pre-built sections showcasing UI/UX strategy, branding, digital marketing, web design, and SEO optimization.
-*   **Highly Performant**: Fully optimized for Core Web Vitals (LCP, INP) to ensure instant page load times and search engine readiness.
+PresenceX uses a strict **"Belt-and-Suspenders"** dual-layered defense to block phone screen replays, printed photos, laptops, and tablet spoof attempts:
 
----
-
-## 🛠️ Technology Stack
-
-| Layer | Technology | Description |
+| Defense Layer | Technology / Model | Mechanism & Signals Detected |
 | :--- | :--- | :--- |
-| **Core Framework** | [Next.js 15](https://nextjs.org/) | React-based server-side rendering, routing, and optimization. |
-| **Language** | [TypeScript](https://www.typescriptlang.org/) | Type safety and enhanced developer tooling. |
-| **Animations** | [GSAP](https://greensock.com/gsap/) & CSS | Premium micro-animations and smooth scroll-driven reveals. |
-| **Styling** | Vanilla CSS | Custom, flexible styling tokens designed for premium layout transitions. |
-| **Deployment** | Firebase App Hosting / Vercel | Seamless, secure hosting for high-traffic environments. |
+| **Layer 1: Neural Network** | **DeepFace PyTorch FASNet** | Multi-scale texture frequency analysis classifying micro-skin texture vs print/screen pixels (`is_real`, `antispoof_score`). |
+| **Layer 2: Optical Heuristics** | **OpenCV Spatial & Spectral PAD** | • **2D FFT Moiré Pattern Analysis**: Screen subpixel refresh grids.<br>• **Specular Glass Glare**: High-intensity light streaks on phone glass.<br>• **Bezel Contour Aspect Ratios**: Phone/tablet border detection.<br>• **Emissive Saturation Clipping**: Blown-out display panel LEDs. |
+
+> **Security Rule**: If **EITHER** Layer 1 flags spoof **OR** Layer 2 flags optical replay, vector matching is stopped and attendance is blocked.
 
 ---
 
-## 📂 Directory Structure
+## 🎥 Real-World CCTV Hardening (Part 6 Pipeline)
 
-```bash
-PresenceX-live/
-├── app/                  # Next.js App Router (pages & layout)
-├── components/           # Reusable UI components
-├── public/               # Static assets & branding assets
-│   ├── images/           # Curated UI assets and branding screenshots
-│   └── js/               # Optimized scripting modules
-├── presencex/            # Core configuration & assets
-├── next.config.ts        # Next.js optimization configuration
-└── tsconfig.json         # TypeScript rules
-```
+Institutions in India and emerging markets predominantly deploy budget 2MP analog/IP CCTV cameras mounted at 10–25 feet with harsh tube lighting or backlit doorways. PresenceX incorporates dedicated real-world preprocessing:
+
+1. **Quality Gate Floor**:
+   - Rejects unrecognizable blobs where `face_width < 20px`, `blur_variance < 8.0`, or `|yaw| > 55.0°`. The system never guesses on invalid data.
+2. **Symmetric CLAHE Lighting Normalization**:
+   - Applied to the L-channel in LAB space with dynamic gamma correction, applied identically during enrollment and verification to eliminate dark/light mode discrepancies.
+3. **Face-Specific Structural Restoration**:
+   - Reconstructs facial boundaries using facial priors exclusively on `MEDIUM` (48–84px) and `LOW` (20–48px) quality tiers without hallucinating foreign features.
+4. **Dynamic Confidence-Adjusted Thresholds**:
+   - Automatically tightens the acceptance threshold for degraded footage (`HIGH: 0.6800`, `MEDIUM: 0.6460`, `LOW: 0.6120`).
+5. **Multi-Frame Rolling Consensus**:
+   - Aggregates 3–5 consecutive CCTV frames with majority voting ($\ge 60\%$) to eliminate transient motion-blur false positives.
 
 ---
 
-## ⚙️ Getting Started
+## 👥 Multi-Embedding Enrollment & Minimum-Distance Matching
 
-Follow these steps to run PresenceX locally:
+To eliminate "registered in light mode, fails in dark mode" sensitivity:
+- Each student/person can have **3–5 varied reference embeddings** stored in the database (ambient room light, angled, and dim lighting).
+- At identification time, the incoming embedding is compared against **all stored embeddings** for each person:
+  $$\text{distance}_{\text{person}} = \min_{e \in \text{Embeddings}_{\text{person}}} (\text{CosineDistance}(\mathbf{u}, e))$$
+- Taking the minimum distance across the enrollment pool dramatically improves true-positive rates while keeping thresholds strict against impostors.
+
+---
+
+## 🚀 Getting Started
 
 ### 1. Prerequisites
-Ensure you have [Node.js](https://nodejs.org/) (v18.x or later) and `npm` installed.
+- **Node.js** v18+ and `npm`
+- **Python** 3.10 – 3.13 with `venv`
+- **SQLite3** / **PostgreSQL (Supabase)**
 
-### 2. Installation
-Clone the repository and install all dependencies:
+### 2. Python Face Engine Setup
 ```bash
-git clone https://github.com/mohitraj8503/PresenceX-live.git
+cd presencex-face-engine
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --port 8001
+```
+
+### 3. Next.js Frontend & API Setup
+```bash
 cd PresenceX-live
 npm install
+npm run dev -p 3000
 ```
-
-### 3. Run Development Server
-Start the Next.js local development server:
-```bash
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) in your browser to interact with the portal.
-
-### 4. Production Build
-To create an optimized production build:
-```bash
-npm run build
-npm run start
-```
+Visit [http://localhost:3000/admin/face-test](http://localhost:3000/admin/face-test) for the interactive Face Test Lab.
 
 ---
 
-## 🌐 Deployment
+## 📡 API Endpoints
 
-PresenceX can be deployed to any modern cloud server or serverless hosting platform.
-
-### Deploying with Firebase App Hosting
-```bash
-# Install Firebase CLI
-npm install -g firebase-tools
-
-# Login to your Firebase account
-firebase login
-
-# Initialize App Hosting
-firebase apphosting:backends:create --project <your-project-id>
-```
+| Endpoint | Method | Description |
+| :--- | :--- | :--- |
+| `/api/face/identify` | `POST` | Single-Face 1:N Identification with dual-layer PAD & quality analysis. |
+| `/api/face/identify-multi` | `POST` | Multi-Face Batch 1:N CCTV vector search across all people in frame. |
+| `/api/face/register` | `POST` | Multi-Embedding enrollment with symmetric CLAHE normalization. |
+| `/api/face/list` | `GET` | List all registered enrolled students/personnel. |
+| `/api/face/delete/{person_id}` | `DELETE` | Remove a registered profile and all associated biometric embeddings. |
+| `/api/session/start` | `POST` | Create an active classroom attendance session. |
+| `/api/attendance/mark` | `POST` | Confirm attendance record linked to verified live session. |
 
 ---
 
-## ❓ Frequently Asked Questions (FAQ)
+## 📜 Deployment & Camera Guidelines
 
-#### Q: What services does PresenceX provide?
-**A:** PresenceX provides end-to-end digital solutions, including web design, development, branding, digital marketing, UI/UX strategy, and SEO optimization.
-
-#### Q: How is the performance optimized?
-**A:** The platform is built on Next.js 15 using standard optimization techniques such as dynamic font loading, lazy-loaded components, optimized image layouts, and minimized client-side scripting modules.
-
-#### Q: Can I customize the design tokens?
-**A:** Yes. The application uses a central CSS setup allowing you to quickly modify colors, fonts, and spacing tokens in `index.css` to match your client's custom branding.
+Refer to [`CAMERA_GUIDELINES.md`](file:///home/mohitraj8503/Documents/presencex-face-engine/CAMERA_GUIDELINES.md) for hardware selection, optical placement heights (5.2–5.8 ft), illumination standards (300–500 lux), and angle avoidance recommendations.
 
 ---
 
 <div align="center">
-    Made with ❤️ by PresenceX Team
+  <b>PresenceX</b> — Built with ❤️ for Real-World Physical Classrooms & Institutions.
 </div>

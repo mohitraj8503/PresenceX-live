@@ -36,7 +36,7 @@ interface MultiFaceResponseData {
 }
 
 interface SingleFaceResultData {
-  status: "recognized" | "unknown" | "no_face_detected" | "spoof_suspected";
+  status?: "recognized" | "unknown" | "unknown_face" | "no_face_detected" | "spoof_suspected" | string;
   person_id?: string | null;
   full_name?: string;
   role?: string;
@@ -44,6 +44,7 @@ interface SingleFaceResultData {
   distance?: number | null;
   quality_score?: number;
   is_low_light?: boolean;
+  error?: string | null;
   liveness?: {
     status: string;
     score: number;
