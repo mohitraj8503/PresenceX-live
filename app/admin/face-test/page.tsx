@@ -507,55 +507,60 @@ export default function FaceTestPage() {
               </div>
             ) : singleResult ? (
               /* Single Face Result Panel */
-              <div
-                style={{
-                  backgroundColor: "#ffffff",
-                  borderRadius: "2rem",
-                  padding: "2rem",
-                  boxShadow: "0 10px 30px rgba(5, 150, 105, 0.08)",
-                  border: "2px solid #a7f3d0",
-                }}
-              >
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    padding: "0.35rem 0.85rem",
-                    borderRadius: "6.25rem",
-                    backgroundColor: "var(--color-success-bg, #ecfdf5)",
-                    color: "var(--color-success, #059669)",
-                    fontSize: "0.85rem",
-                    fontWeight: 700,
-                    marginBottom: "1rem",
-                  }}
-                >
-                  ✓ CONFIRMED MATCH
-                </div>
+              (() => {
+                const isMatched = singleResult.status === "recognized" && Boolean(singleResult.person_id);
+                return (
+                  <div
+                    style={{
+                      backgroundColor: "#ffffff",
+                      borderRadius: "2rem",
+                      padding: "2rem",
+                      boxShadow: isMatched ? "0 10px 30px rgba(5, 150, 105, 0.08)" : "0 10px 30px rgba(220, 38, 38, 0.08)",
+                      border: isMatched ? "2px solid #a7f3d0" : "2px solid #fca5a5",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                        padding: "0.35rem 0.85rem",
+                        borderRadius: "6.25rem",
+                        backgroundColor: isMatched ? "#ecfdf5" : "#fef2f2",
+                        color: isMatched ? "#059669" : "#dc2626",
+                        fontSize: "0.85rem",
+                        fontWeight: 700,
+                        marginBottom: "1rem",
+                      }}
+                    >
+                      {isMatched ? "✓ CONFIRMED MATCH" : "⚠️ UNKNOWN FACE"}
+                    </div>
 
-                <h3 style={{ fontSize: "1.85rem", fontWeight: 700, color: "#090909", margin: "0 0 0.25rem 0" }}>
-                  {singleResult.full_name}
-                </h3>
-                <div style={{ color: "#6b7280", fontSize: "0.9rem", fontFamily: "monospace", marginBottom: "1.5rem" }}>
-                  Person ID: <code>{singleResult.person_id}</code>
-                </div>
+                    <h3 style={{ fontSize: "1.85rem", fontWeight: 700, color: "#090909", margin: "0 0 0.25rem 0" }}>
+                      {isMatched ? singleResult.full_name : "Unknown Face"}
+                    </h3>
+                    <div style={{ color: "#6b7280", fontSize: "0.9rem", fontFamily: "monospace", marginBottom: "1.5rem" }}>
+                      Person ID: <code>{isMatched ? singleResult.person_id : "unrecognized"}</code>
+                    </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-                  <div style={{ padding: "1rem", borderRadius: "1rem", backgroundColor: "#f9fafb", border: "1px solid #e5e7eb" }}>
-                    <div style={{ fontSize: "0.8rem", color: "#6b7280" }}>Cosine Distance</div>
-                    <div style={{ fontSize: "1.5rem", fontWeight: 700, color: "#0040c1" }}>
-                      {singleResult.distance}
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                      <div style={{ padding: "1rem", borderRadius: "1rem", backgroundColor: "#f9fafb", border: "1px solid #e5e7eb" }}>
+                        <div style={{ fontSize: "0.8rem", color: "#6b7280" }}>Cosine Distance</div>
+                        <div style={{ fontSize: "1.5rem", fontWeight: 700, color: "#0040c1" }}>
+                          {isMatched && singleResult.distance != null ? singleResult.distance : "No match (< 0.68)"}
+                        </div>
+                      </div>
+
+                      <div style={{ padding: "1rem", borderRadius: "1rem", backgroundColor: "#f9fafb", border: "1px solid #e5e7eb" }}>
+                        <div style={{ fontSize: "0.8rem", color: "#6b7280" }}>Match Threshold</div>
+                        <div style={{ fontSize: "1.5rem", fontWeight: 700, color: "#059669" }}>
+                          0.6800
+                        </div>
+                      </div>
                     </div>
                   </div>
-
-                  <div style={{ padding: "1rem", borderRadius: "1rem", backgroundColor: "#f9fafb", border: "1px solid #e5e7eb" }}>
-                    <div style={{ fontSize: "0.8rem", color: "#6b7280" }}>Match Threshold</div>
-                    <div style={{ fontSize: "1.5rem", fontWeight: 700, color: "#059669" }}>
-                      0.6800
-                    </div>
-                  </div>
-                </div>
-              </div>
+                );
+              })()
             ) : (
               <div
                 style={{
