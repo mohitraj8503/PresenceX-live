@@ -30,12 +30,12 @@ interface MultiFaceResponseData {
 }
 
 interface SingleFaceResultData {
-  status: "recognized" | "unknown";
-  person_id?: string;
+  status: "recognized" | "unknown" | "no_face_detected";
+  person_id?: string | null;
   full_name?: string;
   role?: string;
   confidence?: number;
-  distance?: number;
+  distance?: number | null;
   quality_score?: number;
   is_low_light?: boolean;
 }
@@ -509,14 +509,33 @@ export default function FaceTestPage() {
               /* Single Face Result Panel */
               (() => {
                 const isMatched = singleResult.status === "recognized" && Boolean(singleResult.person_id);
+                const isNoFace = singleResult.status === "no_face_detected" || (!isMatched && singleResult.person_id === null);
+
+                let badgeText = "✓ CONFIRMED MATCH";
+                let badgeBg = "#ecfdf5";
+                let badgeColor = "#059669";
+                let borderColor = "#a7f3d0";
+
+                if (isNoFace) {
+                  badgeText = "📷 NO FACE DETECTED";
+                  badgeBg = "#f3f4f6";
+                  badgeColor = "#4b5563";
+                  borderColor = "#e5e7eb";
+                } else if (!isMatched) {
+                  badgeText = "⚠️ UNKNOWN FACE";
+                  badgeBg = "#fef2f2";
+                  badgeColor = "#dc2626";
+                  borderColor = "#fca5a5";
+                }
+
                 return (
                   <div
                     style={{
                       backgroundColor: "#ffffff",
                       borderRadius: "2rem",
                       padding: "2rem",
-                      boxShadow: isMatched ? "0 10px 30px rgba(5, 150, 105, 0.08)" : "0 10px 30px rgba(220, 38, 38, 0.08)",
-                      border: isMatched ? "2px solid #a7f3d0" : "2px solid #fca5a5",
+                      boxShadow: "0 10px 30px rgba(0,0,0,0.04)",
+                      border: `2px solid ${borderColor}`,
                     }}
                   >
                     <div
@@ -526,28 +545,28 @@ export default function FaceTestPage() {
                         gap: "0.5rem",
                         padding: "0.35rem 0.85rem",
                         borderRadius: "6.25rem",
-                        backgroundColor: isMatched ? "#ecfdf5" : "#fef2f2",
-                        color: isMatched ? "#059669" : "#dc2626",
+                        backgroundColor: badgeBg,
+                        color: badgeColor,
                         fontSize: "0.85rem",
                         fontWeight: 700,
                         marginBottom: "1rem",
                       }}
                     >
-                      {isMatched ? "✓ CONFIRMED MATCH" : "⚠️ UNKNOWN FACE"}
+                      {badgeText}
                     </div>
 
                     <h3 style={{ fontSize: "1.85rem", fontWeight: 700, color: "#090909", margin: "0 0 0.25rem 0" }}>
-                      {isMatched ? singleResult.full_name : "Unknown Face"}
+                      {isMatched ? singleResult.full_name : isNoFace ? "No Face in Camera Frame" : "Unknown Face"}
                     </h3>
                     <div style={{ color: "#6b7280", fontSize: "0.9rem", fontFamily: "monospace", marginBottom: "1.5rem" }}>
-                      Person ID: <code>{isMatched ? singleResult.person_id : "unrecognized"}</code>
+                      Person ID: <code>{isMatched ? singleResult.person_id : isNoFace ? "none" : "unrecognized"}</code>
                     </div>
 
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                       <div style={{ padding: "1rem", borderRadius: "1rem", backgroundColor: "#f9fafb", border: "1px solid #e5e7eb" }}>
                         <div style={{ fontSize: "0.8rem", color: "#6b7280" }}>Cosine Distance</div>
                         <div style={{ fontSize: isMatched ? "1.5rem" : "0.95rem", fontWeight: 700, color: isMatched ? "#0040c1" : "#6b7280", marginTop: "0.25rem" }}>
-                          {isMatched && singleResult.distance != null ? singleResult.distance : "No match (< 0.68)"}
+                          {isMatched && singleResult.distance != null ? singleResult.distance : isNoFace ? "N/A" : "No match (< 0.68)"}
                         </div>
                       </div>
 

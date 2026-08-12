@@ -6,8 +6,23 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const expectedPersonId = (formData.get("expected_person_id") as string) || "";
+    const imageFile = formData.get("image");
 
-    // 1. Try calling Python Face Engine
+    if (!imageFile) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          status: "no_face_detected",
+          person_id: null,
+          full_name: "No Face Detected",
+          role: "none",
+          distance: null,
+          confidence: 0,
+        },
+      });
+    }
+
+    // 1. Try calling local/remote Python Face Engine (RetinaFace + ArcFace)
     const result = await callFaceEngine("/api/face/identify", {
       method: "POST",
       body: formData,
@@ -17,14 +32,13 @@ export async function POST(request: Request) {
       return NextResponse.json(result.body, { status: result.status });
     }
 
-    // 2. Query Supabase PostgreSQL
-    if (isSupabaseConfigured && supabase) {
-      let query = supabase.from("face_profiles").select("person_id, full_name, role, quality_score");
-      if (expectedPersonId) {
-        query = query.eq("person_id", expectedPersonId);
-      }
-
-      const { data } = await query.limit(1).maybeSingle();
+    // 2. Query Supabase PostgreSQL if Python engine is offline
+    if (isSupabaseConfigured && supabase && expectedPersonId && expectedPersonId !== "none") {
+      const { data } = await supabase
+        .from("face_profiles")
+        .select("person_id, full_name, role, quality_score")
+        .eq("person_id", expectedPersonId)
+        .maybeSingle();
 
       if (data) {
         return NextResponse.json({
@@ -42,33 +56,30 @@ export async function POST(request: Request) {
       }
     }
 
-    // 3. Robust enrolled face match for production domain deployment
-    const targetPersonId = expectedPersonId || "mohitraj8503";
-    const targetName = targetPersonId === "sunny" ? "Sunny" : targetPersonId === "jeetu" ? "jeetu" : "Mohit Raj";
-
+    // 3. Strict Frame Processing: Return NO_FACE when no face is detected or engine is offline
     return NextResponse.json({
       success: true,
       data: {
-        status: "recognized",
-        person_id: targetPersonId,
-        full_name: targetName,
-        role: "student",
-        distance: 0.3477,
-        confidence: 95.4,
-        quality_score: 95,
+        status: "no_face_detected",
+        person_id: null,
+        full_name: "No Face Detected",
+        role: "none",
+        distance: null,
+        confidence: 0,
+        quality_score: 0,
       },
     });
   } catch {
     return NextResponse.json({
       success: true,
       data: {
-        status: "recognized",
-        person_id: "mohitraj8503",
-        full_name: "Mohit Raj",
-        role: "student",
-        distance: 0.3477,
-        confidence: 95.4,
-        quality_score: 95,
+        status: "no_face_detected",
+        person_id: null,
+        full_name: "No Face Detected",
+        role: "none",
+        distance: null,
+        confidence: 0,
+        quality_score: 0,
       },
     });
   }

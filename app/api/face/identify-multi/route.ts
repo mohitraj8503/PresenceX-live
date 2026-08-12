@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       return NextResponse.json(result.body, { status: result.status });
     }
 
-    // Query Supabase PostgreSQL if Python engine is unreachable
+    // Query Supabase PostgreSQL if Python engine is offline
     if (isSupabaseConfigured && supabase) {
       const { data } = await supabase
         .from("face_profiles")
@@ -50,44 +50,22 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       data: {
-        faces_detected: 1,
-        recognized_count: 1,
+        faces_detected: 0,
+        recognized_count: 0,
         unknown_count: 0,
         is_low_light: false,
-        results: [
-          {
-            face_index: 0,
-            person_id: "mohitraj8503",
-            full_name: "Mohit Raj",
-            role: "student",
-            status: "recognized",
-            distance: 0.3477,
-            confidence: 95.4,
-            bbox: { x: 80, y: 60, w: 160, h: 160 },
-          },
-        ],
+        results: [],
       },
     });
   } catch {
     return NextResponse.json({
       success: true,
       data: {
-        faces_detected: 1,
-        recognized_count: 1,
+        faces_detected: 0,
+        recognized_count: 0,
         unknown_count: 0,
         is_low_light: false,
-        results: [
-          {
-            face_index: 0,
-            person_id: "mohitraj8503",
-            full_name: "Mohit Raj",
-            role: "student",
-            status: "recognized",
-            distance: 0.3477,
-            confidence: 95.4,
-            bbox: { x: 80, y: 60, w: 160, h: 160 },
-          },
-        ],
+        results: [],
       },
     });
   }
