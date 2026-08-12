@@ -558,8 +558,31 @@ export default function FaceTestPage() {
                     <h3 style={{ fontSize: "1.85rem", fontWeight: 700, color: "#090909", margin: "0 0 0.25rem 0" }}>
                       {isMatched ? singleResult.full_name : isNoFace ? "No Face in Camera Frame" : "Unknown Face"}
                     </h3>
-                    <div style={{ color: "#6b7280", fontSize: "0.9rem", fontFamily: "monospace", marginBottom: "1.5rem" }}>
+                    <div style={{ color: "#6b7280", fontSize: "0.9rem", fontFamily: "monospace", marginBottom: "1rem" }}>
                       Person ID: <code>{isMatched ? singleResult.person_id : isNoFace ? "none" : "unrecognized"}</code>
+                    </div>
+
+                    {/* Anti-Spoofing & Security Feedback Guidance Box */}
+                    <div
+                      style={{
+                        padding: "0.85rem 1.15rem",
+                        borderRadius: "1rem",
+                        backgroundColor: isMatched ? "#ecfdf5" : isNoFace ? "#f9fafb" : "#fff2f0",
+                        border: `1px solid ${borderColor}`,
+                        color: isMatched ? "#047857" : isNoFace ? "#4b5563" : "#dc2626",
+                        fontSize: "0.88rem",
+                        fontWeight: 600,
+                        marginBottom: "1.5rem",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      {isMatched
+                        ? `✓ ${singleResult.full_name} — Live face verified successfully.`
+                        : isNoFace
+                        ? "👀 No face detected. Please step into the camera frame."
+                        : "❓ Live face detected, but this person is not enrolled in the directory."}
                     </div>
 
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
