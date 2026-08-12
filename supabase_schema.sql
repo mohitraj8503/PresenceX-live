@@ -56,6 +56,41 @@ CREATE TABLE IF NOT EXISTS public.attendance_records (
 );
 
 -- ===============================================================
+-- OPTIMIZED RPC FUNCTION: FAST PGVECTOR 512-D SIMILARITY MATCHING
+-- ===============================================================
+
+CREATE OR REPLACE FUNCTION match_face_embeddings(
+    query_embedding vector(512),
+    match_threshold float,
+    match_count int,
+    org_id text
+)
+RETURNS TABLE (
+    id uuid,
+    person_id text,
+    full_name text,
+    role text,
+    similarity float
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        fp.id,
+        fp.person_id,
+        fp.full_name,
+        fp.role,
+        (1 - (fp.embedding <=> query_embedding))::float AS similarity
+    FROM public.face_profiles fp
+    WHERE fp.organization_id = org_id
+      AND (1 - (fp.embedding <=> query_embedding)) > match_threshold
+    ORDER BY fp.embedding <=> query_embedding
+    LIMIT match_count;
+END;
+$$;
+
+-- ===============================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES FOR TENANT DATA ISOLATION
 -- ===============================================================
 
@@ -64,12 +99,13 @@ ALTER TABLE public.face_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.attendance_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.attendance_records ENABLE ROW LEVEL SECURITY;
 
--- Allow public read access to default organization data for active demo/kiosk
 CREATE POLICY "Allow public read face profiles" ON public.face_profiles FOR SELECT USING (true);
 CREATE POLICY "Allow public insert face profiles" ON public.face_profiles FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update face profiles" ON public.face_profiles FOR UPDATE USING (true);
 
 CREATE POLICY "Allow public read attendance sessions" ON public.attendance_sessions FOR SELECT USING (true);
 CREATE POLICY "Allow public insert attendance sessions" ON public.attendance_sessions FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update attendance sessions" ON public.attendance_sessions FOR UPDATE USING (true);
 
 CREATE POLICY "Allow public read attendance records" ON public.attendance_records FOR SELECT USING (true);
 CREATE POLICY "Allow public insert attendance records" ON public.attendance_records FOR INSERT WITH CHECK (true);
