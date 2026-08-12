@@ -172,7 +172,7 @@ export default function FaceTestPage() {
     >
       <AdminNavbar />
 
-      <main style={{ maxWidth: "1200px", margin: "0 auto", padding: "2.5rem 1.5rem" }}>
+      <main className="px-mobile-main" style={{ maxWidth: "1200px", margin: "0 auto", padding: "2.5rem 1.5rem" }}>
         {/* Title Header & Mode Toggle */}
         <div
           style={{
@@ -186,6 +186,7 @@ export default function FaceTestPage() {
         >
           <div>
             <h1
+              className="px-mobile-h1"
               style={{
                 fontFamily: "var(--_fonts---fonts--title-font, 'Instrument Sans', sans-serif)",
                 fontSize: "2.25rem",
@@ -197,12 +198,13 @@ export default function FaceTestPage() {
             >
               Multi-Face Recognition Engine 🧪
             </h1>
-            <p style={{ margin: "0.35rem 0 0 0", color: "#6b7280", fontSize: "0.95rem" }}>
+            <p className="px-mobile-subtext" style={{ margin: "0.35rem 0 0 0", color: "#6b7280", fontSize: "0.95rem" }}>
               Batch 1:N Vector Search & Classroom CCTV Analytics
             </p>
           </div>
 
           <div
+            className="px-mobile-pills"
             style={{
               display: "flex",
               backgroundColor: "#ffffff",
@@ -254,9 +256,10 @@ export default function FaceTestPage() {
         </div>
 
         {/* 2-Column Grid: Camera Left, Results Right */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", alignItems: "start" }}>
+        <div className="px-mobile-grid-stack" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", alignItems: "start" }}>
           {/* Left Column: Camera Stream */}
           <div
+            className="px-mobile-card"
             style={{
               backgroundColor: "#ffffff",
               borderRadius: "2rem",
@@ -293,6 +296,7 @@ export default function FaceTestPage() {
                 <select
                   value={expectedPersonId}
                   onChange={(e) => setExpectedPersonId(e.target.value)}
+                  className="px-mobile-input"
                   style={{
                     width: "100%",
                     padding: "0.75rem 1rem",
@@ -359,6 +363,7 @@ export default function FaceTestPage() {
 
             {isTesting ? (
               <div
+                className="px-mobile-card"
                 style={{
                   backgroundColor: "#ffffff",
                   borderRadius: "2rem",
@@ -390,7 +395,7 @@ export default function FaceTestPage() {
               /* Multi-Face Classroom CCTV Results Panel */
               <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
                 {/* Metric Summary Strip */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1rem" }}>
+                <div className="px-mobile-metrics-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1rem" }}>
                   <div style={{ backgroundColor: "#ffffff", padding: "1.15rem", borderRadius: "1.5rem", border: "1px solid #eff4ff" }}>
                     <div style={{ fontSize: "0.8rem", color: "#6b7280", fontWeight: 600 }}>Detected</div>
                     <div style={{ fontSize: "1.85rem", fontWeight: 700, color: "#0040c1", marginTop: "0.2rem" }}>

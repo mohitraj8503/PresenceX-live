@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins, Instrument_Sans } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+import "./css/mobile.css";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -20,6 +21,12 @@ const instrumentSans = Instrument_Sans({
 export const metadata: Metadata = {
   title: "PresenceX - AI Attendance Management Platform",
   description: "PresenceX is an AI-powered smart attendance management platform that automatically records attendance based on physical presence.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({

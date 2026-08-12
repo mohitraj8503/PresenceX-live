@@ -142,10 +142,11 @@ export default function AdminRegisterPage() {
     >
       <AdminNavbar />
 
-      <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "2.5rem 1.5rem" }}>
+      <main className="px-mobile-main" style={{ maxWidth: "1100px", margin: "0 auto", padding: "2.5rem 1.5rem" }}>
         {/* Title Header */}
         <div style={{ marginBottom: "2rem" }}>
           <h1
+            className="px-mobile-h1"
             style={{
               fontFamily: "var(--_fonts---fonts--title-font, 'Instrument Sans', sans-serif)",
               fontSize: "2.25rem",
@@ -157,13 +158,14 @@ export default function AdminRegisterPage() {
           >
             Face Enrollment Portal
           </h1>
-          <p style={{ margin: "0.35rem 0 0 0", color: "#6b7280", fontSize: "0.95rem" }}>
+          <p className="px-mobile-subtext" style={{ margin: "0.35rem 0 0 0", color: "#6b7280", fontSize: "0.95rem" }}>
             Register student or staff face embeddings into the PresenceX AI system.
           </p>
         </div>
 
         {/* 2-Column Enrollment Workspace */}
         <div
+          className="px-mobile-grid-stack"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
@@ -174,6 +176,7 @@ export default function AdminRegisterPage() {
         >
           {/* Left Form / Success Details */}
           <div
+            className="px-mobile-card"
             style={{
               backgroundColor: "#ffffff",
               borderRadius: "2rem",
@@ -274,7 +277,7 @@ export default function AdminRegisterPage() {
                   <div style={{ color: "#059669", fontWeight: 600 }}>✓ Database record stored in SQLite</div>
                 </div>
 
-                <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center" }}>
+                <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
                   <button
                     onClick={handleReset}
                     style={{
@@ -327,6 +330,7 @@ export default function AdminRegisterPage() {
                     onChange={handleNameChange}
                     placeholder="e.g. Mohit Raj"
                     required
+                    className="px-mobile-input"
                     style={{
                       width: "100%",
                       padding: "0.85rem 1.15rem",
@@ -357,6 +361,7 @@ export default function AdminRegisterPage() {
                     onChange={(e) => setPersonId(e.target.value)}
                     placeholder="e.g. mohit_raj"
                     required
+                    className="px-mobile-input"
                     style={{
                       width: "100%",
                       padding: "0.85rem 1.15rem",
@@ -384,6 +389,7 @@ export default function AdminRegisterPage() {
                   <select
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
+                    className="px-mobile-input"
                     style={{
                       width: "100%",
                       padding: "0.85rem 1.15rem",
@@ -417,7 +423,7 @@ export default function AdminRegisterPage() {
           </div>
 
           {/* Right Live Camera Viewport */}
-          <div>
+          <div className="px-mobile-card" style={{ backgroundColor: "#ffffff", borderRadius: "2rem", padding: "2rem", border: "1px solid #eff4ff" }}>
             <h2
               style={{
                 fontFamily: "var(--_fonts---fonts--title-font, 'Instrument Sans', sans-serif)",

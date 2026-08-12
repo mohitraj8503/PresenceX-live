@@ -326,10 +326,11 @@ export default function DashboardView({ mode }: DashboardViewProps) {
     >
       <AdminNavbar />
 
-      <main style={{ maxWidth: "1200px", margin: "0 auto", padding: "2.5rem 1.5rem" }}>
+      <main className="px-mobile-main" style={{ maxWidth: "1200px", margin: "0 auto", padding: "2.5rem 1.5rem" }}>
         {/* Customer Free Trial / Paid Subscription Banner ONLY in Organization Mode */}
         {mode === "organization" && (
           <div
+            className="px-mobile-card"
             style={{
               backgroundColor: subStatus.is_paid ? "#ecfdf5" : "#eff4ff",
               border: subStatus.is_paid ? "1px solid #a7f3d0" : "1px solid #d1e0ff",
@@ -339,12 +340,14 @@ export default function DashboardView({ mode }: DashboardViewProps) {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "1rem",
               boxShadow: subStatus.is_paid
                 ? "0 4px 14px rgba(5, 150, 105, 0.08)"
                 : "0 4px 14px rgba(0, 64, 193, 0.04)",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", flexWrap: "wrap" }}>
               <span
                 style={{
                   padding: "0.35rem 0.85rem",
@@ -396,6 +399,7 @@ export default function DashboardView({ mode }: DashboardViewProps) {
         {/* Test Sandbox Mode Banner ONLY in Test Mode */}
         {mode === "test" && (
           <div
+            className="px-mobile-card"
             style={{
               backgroundColor: "#fffbeb",
               border: "1px solid #fef3c7",
@@ -405,10 +409,12 @@ export default function DashboardView({ mode }: DashboardViewProps) {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "1rem",
               boxShadow: "0 4px 14px rgba(217, 119, 6, 0.05)",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", flexWrap: "wrap" }}>
               <span
                 style={{
                   padding: "0.35rem 0.85rem",
@@ -434,6 +440,7 @@ export default function DashboardView({ mode }: DashboardViewProps) {
         {/* Active Live Session Banner */}
         {activeLiveSession && (
           <div
+            className="px-mobile-card"
             style={{
               backgroundColor: "#ecfdf5",
               border: "1px solid #a7f3d0",
@@ -443,10 +450,12 @@ export default function DashboardView({ mode }: DashboardViewProps) {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "1rem",
               boxShadow: "0 8px 20px rgba(5, 150, 105, 0.06)",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", flexWrap: "wrap" }}>
               <span
                 style={{
                   padding: "0.35rem 0.85rem",
@@ -573,8 +582,9 @@ export default function DashboardView({ mode }: DashboardViewProps) {
         </div>
 
         {/* Executive Metric Cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem", marginBottom: "2.5rem" }}>
+        <div className="px-mobile-metrics-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem", marginBottom: "2.5rem" }}>
           <div
+            className="px-mobile-card"
             style={{
               backgroundColor: "#ffffff",
               borderRadius: "1.75rem",
@@ -609,6 +619,7 @@ export default function DashboardView({ mode }: DashboardViewProps) {
           </div>
 
           <div
+            className="px-mobile-card"
             style={{
               backgroundColor: "#ffffff",
               borderRadius: "1.75rem",
@@ -643,6 +654,7 @@ export default function DashboardView({ mode }: DashboardViewProps) {
           </div>
 
           <div
+            className="px-mobile-card"
             style={{
               backgroundColor: "#ffffff",
               borderRadius: "1.75rem",
@@ -678,7 +690,7 @@ export default function DashboardView({ mode }: DashboardViewProps) {
         </div>
 
         {/* 2-Column Main Workspace */}
-        <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: "2rem", marginBottom: "2.5rem" }}>
+        <div className="px-mobile-grid-stack" style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: "2rem", marginBottom: "2.5rem" }}>
           {/* Sidebar: Sessions List */}
           <div
             style={{

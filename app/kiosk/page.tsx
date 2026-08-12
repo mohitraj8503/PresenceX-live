@@ -233,10 +233,11 @@ export default function KioskPage() {
     >
       <AdminNavbar />
 
-      <main style={{ maxWidth: "1200px", margin: "0 auto", padding: "2.5rem 1.5rem", flex: 1, width: "100%" }}>
+      <main className="px-mobile-main" style={{ maxWidth: "1200px", margin: "0 auto", padding: "2.5rem 1.5rem", flex: 1, width: "100%" }}>
         {/* Completed Session Summary View */}
         {sessionCompletedSummary ? (
           <div
+            className="px-mobile-card"
             style={{
               backgroundColor: "#ffffff",
               borderRadius: "2rem",
@@ -266,6 +267,7 @@ export default function KioskPage() {
             </div>
 
             <h2
+              className="px-mobile-h1"
               style={{
                 fontFamily: "var(--_fonts---fonts--title-font, 'Instrument Sans', sans-serif)",
                 fontSize: "2.25rem",
@@ -276,12 +278,12 @@ export default function KioskPage() {
             >
               Attendance Session Completed
             </h2>
-            <p style={{ color: "#6b7280", fontSize: "1rem", margin: "0 0 2rem 0" }}>
+            <p className="px-mobile-subtext" style={{ color: "#6b7280", fontSize: "1rem", margin: "0 0 2rem 0" }}>
               {sessionCompletedSummary.session_name}
             </p>
 
             {/* Metric Strip */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.25rem", marginBottom: "2.5rem" }}>
+            <div className="px-mobile-metrics-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.25rem", marginBottom: "2.5rem" }}>
               <div style={{ padding: "1.25rem", borderRadius: "1.5rem", backgroundColor: "#f9fafb", border: "1px solid #e5e7eb" }}>
                 <div style={{ fontSize: "0.85rem", color: "#6b7280" }}>Enrolled</div>
                 <div style={{ fontSize: "2rem", fontWeight: 700, color: "#111827", marginTop: "0.25rem" }}>
@@ -334,6 +336,7 @@ export default function KioskPage() {
         ) : !activeSession ? (
           /* No Active Session State */
           <div
+            className="px-mobile-card"
             style={{
               backgroundColor: "#ffffff",
               borderRadius: "2rem",
@@ -362,6 +365,7 @@ export default function KioskPage() {
               📷
             </div>
             <h2
+              className="px-mobile-h1"
               style={{
                 fontFamily: "var(--_fonts---fonts--title-font, 'Instrument Sans', sans-serif)",
                 fontSize: "1.75rem",
@@ -372,7 +376,7 @@ export default function KioskPage() {
             >
               No Live Session Running
             </h2>
-            <p style={{ color: "#6b7280", fontSize: "0.95rem", margin: "0 0 2rem 0", lineHeight: 1.5 }}>
+            <p className="px-mobile-subtext" style={{ color: "#6b7280", fontSize: "0.95rem", margin: "0 0 2rem 0", lineHeight: 1.5 }}>
               Start an attendance session from the dashboard to activate the periodic 60s checkpoint engine.
             </p>
 
@@ -397,6 +401,7 @@ export default function KioskPage() {
           <div>
             {/* Live Session Control Header - Spacious & Pixel-Perfect */}
             <div
+              className="px-mobile-card"
               style={{
                 backgroundColor: "#ffffff",
                 borderRadius: "2rem",
@@ -412,7 +417,7 @@ export default function KioskPage() {
               }}
             >
               <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
                   <span
                     style={{
                       padding: "0.35rem 0.85rem",
@@ -434,6 +439,7 @@ export default function KioskPage() {
                 </div>
 
                 <h1
+                  className="px-mobile-h1"
                   style={{
                     fontFamily: "var(--_fonts---fonts--title-font, 'Instrument Sans', sans-serif)",
                     fontSize: "2.25rem",
@@ -542,9 +548,10 @@ export default function KioskPage() {
             </div>
 
             {/* 2-Column Layout: Live Camera Left, Verified Attendees List Right */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: "2rem", alignItems: "start" }}>
+            <div className="px-mobile-grid-stack" style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: "2rem", alignItems: "start" }}>
               {/* Left Column: Live Camera */}
               <div
+                className="px-mobile-card"
                 style={{
                   backgroundColor: "#ffffff",
                   borderRadius: "2rem",

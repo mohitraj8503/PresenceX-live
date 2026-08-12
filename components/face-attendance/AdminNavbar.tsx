@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function AdminNavbar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -41,7 +42,7 @@ export default function AdminNavbar() {
         style={{
           maxWidth: "1200px",
           margin: "0 auto",
-          padding: "0.85rem 1.5rem",
+          padding: "0.75rem 1.25rem",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -61,7 +62,7 @@ export default function AdminNavbar() {
           <img
             src="/images/main-logo.svg"
             alt="PresenceX Logo"
-            style={{ height: "28px", width: "auto" }}
+            style={{ height: "26px", width: "auto" }}
           />
 
           <span
@@ -80,8 +81,8 @@ export default function AdminNavbar() {
           </span>
         </Link>
 
-        {/* Center Nav Links */}
-        <nav style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+        {/* Desktop Nav Links */}
+        <nav className="px-desktop-nav" style={{ alignItems: "center", gap: "0.6rem" }}>
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
@@ -110,11 +111,11 @@ export default function AdminNavbar() {
           })}
         </nav>
 
-        {/* Logout Button */}
+        {/* Desktop Logout Button */}
         <button
           onClick={handleLogout}
+          className="px-desktop-logout"
           style={{
-            display: "inline-flex",
             alignItems: "center",
             gap: "0.4rem",
             padding: "0.55rem 1.15rem",
@@ -131,7 +132,128 @@ export default function AdminNavbar() {
           <span>Logout</span>
           <span>🚪</span>
         </button>
+
+        {/* Mobile Hamburger Toggle Button */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="px-mobile-hamburger-btn"
+          aria-label="Toggle navigation menu"
+          style={{
+            width: "44px",
+            height: "44px",
+            borderRadius: "50%",
+            backgroundColor: isMobileMenuOpen ? "#eff4ff" : "#f9fafb",
+            border: "1px solid #d1e0ff",
+            color: "#0040c1",
+            fontSize: "1.25rem",
+            display: "none",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+          }}
+        >
+          {isMobileMenuOpen ? "✕" : "☰"}
+        </button>
       </div>
+
+      {/* Mobile Drawer Navigation Menu */}
+      {isMobileMenuOpen && (
+        <div
+          className="px-mobile-drawer"
+          style={{
+            backgroundColor: "#ffffff",
+            borderTop: "1px solid #eff4ff",
+            padding: "1rem 1.25rem 1.5rem 1.25rem",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.6rem",
+          }}
+        >
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem",
+                  padding: "0.85rem 1.25rem",
+                  minHeight: "48px",
+                  borderRadius: "1rem",
+                  fontSize: "0.95rem",
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  backgroundColor: isActive ? "#0040c1" : "#f9fafb",
+                  color: isActive ? "#ffffff" : "#374151",
+                  border: `1px solid ${isActive ? "#0040c1" : "#e5e7eb"}`,
+                  boxShadow: isActive ? "0 4px 12px rgba(0, 64, 193, 0.2)" : "none",
+                }}
+              >
+                <span style={{ fontSize: "1.1rem" }}>{link.icon}</span>
+                <span>{link.label}</span>
+              </Link>
+            );
+          })}
+
+          <button
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              handleLogout();
+            }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+              padding: "0.85rem 1.25rem",
+              minHeight: "48px",
+              marginTop: "0.4rem",
+              borderRadius: "1rem",
+              backgroundColor: "#fef2f2",
+              color: "#dc2626",
+              border: "1px solid #fecaca",
+              fontSize: "0.95rem",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            <span>Logout</span>
+            <span>🚪</span>
+          </button>
+        </div>
+      )}
+
+      <style jsx>{`
+        @media screen and (min-width: 768px) {
+          :global(.px-desktop-nav) {
+            display: flex !important;
+          }
+          :global(.px-desktop-logout) {
+            display: inline-flex !important;
+          }
+          :global(.px-mobile-hamburger-btn) {
+            display: none !important;
+          }
+          :global(.px-mobile-drawer) {
+            display: none !important;
+          }
+        }
+        @media screen and (max-width: 767px) {
+          :global(.px-desktop-nav) {
+            display: none !important;
+          }
+          :global(.px-desktop-logout) {
+            display: none !important;
+          }
+          :global(.px-mobile-hamburger-btn) {
+            display: flex !important;
+          }
+        }
+      `}</style>
     </header>
   );
 }
