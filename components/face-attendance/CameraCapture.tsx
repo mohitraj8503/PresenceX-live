@@ -87,12 +87,21 @@ export default function CameraCapture({
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    const width = video.videoWidth || 640;
-    const height = video.videoHeight || 480;
+    const rawWidth = video.videoWidth || 640;
+    const rawHeight = video.videoHeight || 480;
 
-    if (canvas.width !== width || canvas.height !== height) {
-      canvas.width = width;
-      canvas.height = height;
+    // Scale down resolution if camera streams 1080p/4K to speed up network and CPU inference
+    const maxDimension = 960;
+    let targetWidth = rawWidth;
+    let targetHeight = rawHeight;
+    if (rawWidth > maxDimension) {
+      targetWidth = maxDimension;
+      targetHeight = Math.round((rawHeight * maxDimension) / rawWidth);
+    }
+
+    if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
     }
 
     const ctx = canvas.getContext("2d");
@@ -102,7 +111,7 @@ export default function CameraCapture({
       return;
     }
 
-    ctx.drawImage(video, 0, 0, width, height);
+    ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
 
     canvas.toBlob(
       (blob) => {
@@ -120,7 +129,7 @@ export default function CameraCapture({
         }, 1500);
       },
       "image/jpeg",
-      0.92
+      0.88
     );
   }, [disabled, checkpointIntervalSeconds, onCapture, qualityScore, testImageFile]);
 
