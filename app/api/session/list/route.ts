@@ -1,28 +1,37 @@
 import { NextResponse } from "next/server";
 import { callFaceEngine } from "@/lib/faceEngine";
-
-const DEFAULT_SESSIONS = [
-  {
-    session_id: "session_demo_01",
-    session_name: "B.Tech AI & DS - Morning Attendance",
-    started_by: "organization_admin",
-    is_active: true,
-    started_at: new Date().toISOString(),
-    total_marked: 3,
-  },
-  {
-    session_id: "session_demo_02",
-    session_name: "Computer Science - Lab Session",
-    started_by: "organization_admin",
-    is_active: false,
-    started_at: new Date(Date.now() - 86400000).toISOString(),
-    ended_at: new Date(Date.now() - 82800000).toISOString(),
-    total_marked: 3,
-  },
-];
+import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 
 export async function GET() {
   try {
+    // 1. Try querying Supabase PostgreSQL first
+    if (isSupabaseConfigured && supabase) {
+      const { data, error } = await supabase
+        .from("attendance_sessions")
+        .select("*")
+        .order("started_at", { ascending: false });
+
+      if (!error && data) {
+        const formattedSessions = data.map((s) => ({
+          session_id: s.id,
+          session_name: s.session_name,
+          started_by: s.started_by || "organization_admin",
+          is_active: s.is_active,
+          started_at: s.started_at,
+          ended_at: s.ended_at,
+          total_marked: s.total_marked || 0,
+        }));
+
+        return NextResponse.json({
+          success: true,
+          data: {
+            sessions: formattedSessions,
+          },
+        });
+      }
+    }
+
+    // 2. Query Python Face Engine
     const result = await callFaceEngine("/api/session/list", {
       method: "GET",
     });
@@ -35,23 +44,23 @@ export async function GET() {
       result.body &&
       result.body.success &&
       sData &&
-      Array.isArray(sData.sessions) &&
-      sData.sessions.length > 0
+      Array.isArray(sData.sessions)
     ) {
       return NextResponse.json(result.body, { status: result.status });
     }
 
+    // 3. Return clean empty sessions list if no sessions exist
     return NextResponse.json({
       success: true,
       data: {
-        sessions: DEFAULT_SESSIONS,
+        sessions: [],
       },
     });
   } catch {
     return NextResponse.json({
       success: true,
       data: {
-        sessions: DEFAULT_SESSIONS,
+        sessions: [],
       },
     });
   }

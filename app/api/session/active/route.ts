@@ -37,24 +37,12 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      data: {
-        session_id: "session_demo_01",
-        session_name: "B.Tech AI & DS - Morning Attendance",
-        is_active: true,
-        started_at: new Date().toISOString(),
-        total_marked: 3,
-      },
+      data: null,
     });
   } catch {
     return NextResponse.json({
       success: true,
-      data: {
-        session_id: "session_demo_01",
-        session_name: "B.Tech AI & DS - Morning Attendance",
-        is_active: true,
-        started_at: new Date().toISOString(),
-        total_marked: 3,
-      },
+      data: null,
     });
   }
 }

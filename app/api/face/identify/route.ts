@@ -13,30 +13,27 @@ export async function POST(request: Request) {
       return NextResponse.json(result.body, { status: result.status });
     }
 
-    // Fallback live face identification for production deployment
     return NextResponse.json({
       success: true,
       data: {
-        status: "recognized",
-        person_id: "mohitraj8503",
-        full_name: "Mohit Raj",
-        role: "student",
-        distance: 0.284,
-        confidence: 95.4,
-        quality_score: 92,
+        status: "unknown",
+        person_id: null,
+        full_name: "Unknown Face",
+        role: "unrecognized",
+        confidence: 0,
+        quality_score: 80,
       },
     });
   } catch {
     return NextResponse.json({
       success: true,
       data: {
-        status: "recognized",
-        person_id: "mohitraj8503",
-        full_name: "Mohit Raj",
-        role: "student",
-        distance: 0.284,
-        confidence: 95.4,
-        quality_score: 92,
+        status: "unknown",
+        person_id: null,
+        full_name: "Unknown Face",
+        role: "unrecognized",
+        confidence: 0,
+        quality_score: 80,
       },
     });
   }
