@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { callFaceEngine } from "@/lib/faceEngine";
+import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 
 const FALLBACK_PERSONS = [
   {
@@ -33,6 +34,24 @@ const FALLBACK_PERSONS = [
 
 export async function GET() {
   try {
+    // 1. Try querying Supabase PostgreSQL first if configured
+    if (isSupabaseConfigured && supabase) {
+      const { data, error } = await supabase
+        .from("face_profiles")
+        .select("person_id, full_name, role, verification_method, quality_score, photo_url, created_at");
+
+      if (!error && data && data.length > 0) {
+        return NextResponse.json({
+          success: true,
+          data: {
+            total_registered: data.length,
+            registered_persons: data,
+          },
+        });
+      }
+    }
+
+    // 2. Try querying local Python Face Engine
     const result = await callFaceEngine("/api/face/list", {
       method: "GET",
     });
@@ -51,7 +70,7 @@ export async function GET() {
       return NextResponse.json(result.body, { status: result.status });
     }
 
-    // Fallback to seed profiles if Python engine is unreachable or DB is empty on production
+    // 3. Fallback to verified seed profiles
     return NextResponse.json({
       success: true,
       data: {
