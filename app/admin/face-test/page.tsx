@@ -546,7 +546,7 @@ export default function FaceTestPage() {
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                       <div style={{ padding: "1rem", borderRadius: "1rem", backgroundColor: "#f9fafb", border: "1px solid #e5e7eb" }}>
                         <div style={{ fontSize: "0.8rem", color: "#6b7280" }}>Cosine Distance</div>
-                        <div style={{ fontSize: "1.5rem", fontWeight: 700, color: "#0040c1" }}>
+                        <div style={{ fontSize: isMatched ? "1.5rem" : "0.95rem", fontWeight: 700, color: isMatched ? "#0040c1" : "#6b7280", marginTop: "0.25rem" }}>
                           {isMatched && singleResult.distance != null ? singleResult.distance : "No match (< 0.68)"}
                         </div>
                       </div>
