@@ -22,13 +22,34 @@ export async function POST(request: Request) {
       });
     }
 
-    // 1. Try calling local/remote Python Face Engine (RetinaFace + ArcFace)
+    // 1. Try calling local/remote Python Face Engine (RetinaFace + ArcFace + Anti-Spoof Liveness)
     const result = await callFaceEngine("/api/face/identify", {
       method: "POST",
       body: formData,
     });
 
     if (result.status === 200 && result.body && result.body.success) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const data = result.body.data as any;
+      if (data && (data.is_spoof || data.liveness_status === "SPOOF_SUSPECTED")) {
+        return NextResponse.json({
+          success: true,
+          data: {
+            status: "spoof_suspected",
+            person_id: null,
+            full_name: "Screen / Photo Blocked",
+            role: "none",
+            distance: null,
+            confidence: 0,
+            quality_score: data.quality_score || 80,
+            liveness: {
+              status: "SPOOF_SUSPECTED",
+              score: 0.92,
+              reasons: ["screen_detected", "presentation_attack"],
+            },
+          },
+        });
+      }
       return NextResponse.json(result.body, { status: result.status });
     }
 

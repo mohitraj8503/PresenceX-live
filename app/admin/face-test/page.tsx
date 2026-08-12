@@ -15,8 +15,8 @@ interface MultiFaceResultItem {
   person_id?: string | null;
   full_name?: string;
   role?: string;
-  status: "recognized" | "unknown";
-  distance?: number;
+  status: "recognized" | "unknown" | "spoof_suspected";
+  distance?: number | null;
   confidence?: number;
   bbox: { x: number; y: number; w: number; h: number };
 }
@@ -26,11 +26,17 @@ interface MultiFaceResponseData {
   recognized_count: number;
   unknown_count: number;
   is_low_light: boolean;
+  status?: string;
+  liveness?: {
+    status: string;
+    score: number;
+    reasons: string[];
+  };
   results: MultiFaceResultItem[];
 }
 
 interface SingleFaceResultData {
-  status: "recognized" | "unknown" | "no_face_detected";
+  status: "recognized" | "unknown" | "no_face_detected" | "spoof_suspected";
   person_id?: string | null;
   full_name?: string;
   role?: string;
@@ -38,6 +44,11 @@ interface SingleFaceResultData {
   distance?: number | null;
   quality_score?: number;
   is_low_light?: boolean;
+  liveness?: {
+    status: string;
+    score: number;
+    reasons: string[];
+  };
 }
 
 export default function FaceTestPage() {
@@ -508,15 +519,21 @@ export default function FaceTestPage() {
             ) : singleResult ? (
               /* Single Face Result Panel */
               (() => {
-                const isMatched = singleResult.status === "recognized" && Boolean(singleResult.person_id);
-                const isNoFace = singleResult.status === "no_face_detected" || (!isMatched && singleResult.person_id === null);
+                const isSpoof = singleResult.status === "spoof_suspected" || singleResult.liveness?.status === "SPOOF_SUSPECTED";
+                const isMatched = !isSpoof && singleResult.status === "recognized" && Boolean(singleResult.person_id);
+                const isNoFace = !isSpoof && (singleResult.status === "no_face_detected" || (!isMatched && singleResult.person_id === null));
 
                 let badgeText = "✓ CONFIRMED MATCH";
                 let badgeBg = "#ecfdf5";
                 let badgeColor = "#059669";
                 let borderColor = "#a7f3d0";
 
-                if (isNoFace) {
+                if (isSpoof) {
+                  badgeText = "📱 SCREEN / MOBILE DETECTED";
+                  badgeBg = "#fff2f0";
+                  badgeColor = "#ff4d4f";
+                  borderColor = "#ffccc7";
+                } else if (isNoFace) {
                   badgeText = "📷 NO FACE DETECTED";
                   badgeBg = "#f3f4f6";
                   badgeColor = "#4b5563";
@@ -556,10 +573,10 @@ export default function FaceTestPage() {
                     </div>
 
                     <h3 style={{ fontSize: "1.85rem", fontWeight: 700, color: "#090909", margin: "0 0 0.25rem 0" }}>
-                      {isMatched ? singleResult.full_name : isNoFace ? "No Face in Camera Frame" : "Unknown Face"}
+                      {isSpoof ? "Presentation Attack Blocked" : isMatched ? singleResult.full_name : isNoFace ? "No Face in Camera Frame" : "Unknown Face"}
                     </h3>
                     <div style={{ color: "#6b7280", fontSize: "0.9rem", fontFamily: "monospace", marginBottom: "1rem" }}>
-                      Person ID: <code>{isMatched ? singleResult.person_id : isNoFace ? "none" : "unrecognized"}</code>
+                      Person ID: <code>{isSpoof ? "none (Spoof Blocked)" : isMatched ? singleResult.person_id : isNoFace ? "none" : "unrecognized"}</code>
                     </div>
 
                     {/* Anti-Spoofing & Security Feedback Guidance Box */}
@@ -567,9 +584,9 @@ export default function FaceTestPage() {
                       style={{
                         padding: "0.85rem 1.15rem",
                         borderRadius: "1rem",
-                        backgroundColor: isMatched ? "#ecfdf5" : isNoFace ? "#f9fafb" : "#fff2f0",
+                        backgroundColor: isSpoof ? "#fff2f0" : isMatched ? "#ecfdf5" : isNoFace ? "#f9fafb" : "#fff2f0",
                         border: `1px solid ${borderColor}`,
-                        color: isMatched ? "#047857" : isNoFace ? "#4b5563" : "#dc2626",
+                        color: isSpoof ? "#dc2626" : isMatched ? "#047857" : isNoFace ? "#4b5563" : "#dc2626",
                         fontSize: "0.88rem",
                         fontWeight: 600,
                         marginBottom: "1.5rem",
@@ -578,7 +595,9 @@ export default function FaceTestPage() {
                         gap: "0.5rem",
                       }}
                     >
-                      {isMatched
+                      {isSpoof
+                        ? "📱 Screen / photo detected. Please keep your mobile phone away and show your live face."
+                        : isMatched
                         ? `✓ ${singleResult.full_name} — Live face verified successfully.`
                         : isNoFace
                         ? "👀 No face detected. Please step into the camera frame."
@@ -589,7 +608,7 @@ export default function FaceTestPage() {
                       <div style={{ padding: "1rem", borderRadius: "1rem", backgroundColor: "#f9fafb", border: "1px solid #e5e7eb" }}>
                         <div style={{ fontSize: "0.8rem", color: "#6b7280" }}>Cosine Distance</div>
                         <div style={{ fontSize: isMatched ? "1.5rem" : "0.95rem", fontWeight: 700, color: isMatched ? "#0040c1" : "#6b7280", marginTop: "0.25rem" }}>
-                          {isMatched && singleResult.distance != null ? singleResult.distance : isNoFace ? "N/A" : "No match (< 0.68)"}
+                          {isMatched && singleResult.distance != null ? singleResult.distance : isSpoof ? "Blocked (Spoof)" : isNoFace ? "N/A" : "No match (< 0.68)"}
                         </div>
                       </div>
 

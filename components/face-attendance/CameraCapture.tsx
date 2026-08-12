@@ -18,8 +18,8 @@ export interface DetectedFaceBox {
   w: number;
   h: number;
   label?: string;
-  status?: "recognized" | "unknown" | "low_quality";
-  distance?: number;
+  status?: "recognized" | "unknown" | "low_quality" | "spoof_suspected";
+  distance?: number | null;
 }
 
 interface CameraCaptureProps {
