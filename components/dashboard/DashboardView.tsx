@@ -203,6 +203,25 @@ export default function DashboardView({ mode }: DashboardViewProps) {
     }
   };
 
+  const handleDeleteProfile = async (personId: string, fullName: string) => {
+    if (!confirm(`Are you sure you want to delete profile for "${fullName}"?`)) return;
+
+    try {
+      const res = await fetch(`/api/face/delete/${personId}`, {
+        method: "DELETE",
+      });
+      const json = await res.json();
+      if (json.success) {
+        setRegisteredPeople((prev) => prev.filter((p) => p.person_id !== personId));
+      } else {
+        alert("Failed to delete profile.");
+      }
+    } catch (err) {
+      console.error("Error deleting profile:", err);
+      alert("Error deleting profile.");
+    }
+  };
+
   const handleBulkUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!bulkFiles || bulkFiles.length === 0) return;
@@ -1143,20 +1162,40 @@ export default function DashboardView({ mode }: DashboardViewProps) {
                           </div>
                         </div>
 
-                        <span
-                          style={{
-                            padding: "0.3rem 0.8rem",
-                            borderRadius: "6.25rem",
-                            backgroundColor: isFaculty ? "#fffbeb" : "#ecfdf5",
-                            color: isFaculty ? "#d97706" : "#059669",
-                            fontSize: "0.8rem",
-                            fontWeight: 700,
-                            textTransform: "capitalize",
-                            flexShrink: 0,
-                          }}
-                        >
-                          {person.role}
-                        </span>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
+                          <span
+                            style={{
+                              padding: "0.3rem 0.8rem",
+                              borderRadius: "6.25rem",
+                              backgroundColor: isFaculty ? "#fffbeb" : "#ecfdf5",
+                              color: isFaculty ? "#d97706" : "#059669",
+                              fontSize: "0.8rem",
+                              fontWeight: 700,
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            {person.role}
+                          </span>
+                          <button
+                            onClick={() => handleDeleteProfile(person.person_id, person.full_name)}
+                            title="Delete Profile"
+                            style={{
+                              padding: "0.3rem 0.65rem",
+                              borderRadius: "6.25rem",
+                              backgroundColor: "#fef2f2",
+                              color: "#dc2626",
+                              border: "1px solid #fee2e2",
+                              fontSize: "0.75rem",
+                              fontWeight: 600,
+                              cursor: "pointer",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "0.25rem",
+                            }}
+                          >
+                            🗑️ Delete
+                          </button>
+                        </div>
                       </div>
 
                       {(() => {
