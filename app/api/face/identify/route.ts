@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     if (result.status === 200 && result.body && result.body.success) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data = result.body.data as any;
-      if (data && (data.is_spoof || data.liveness_status === "SPOOF_SUSPECTED")) {
+      if (data && (data.is_spoof || data.liveness_status === "SPOOF_SUSPECTED" || result.body.error === "spoof_detected")) {
         return NextResponse.json({
           success: true,
           data: {
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
             role: "none",
             distance: null,
             confidence: 0,
-            quality_score: data.quality_score || 80,
+            quality_score: data?.quality_score || 80,
             liveness: {
               status: "SPOOF_SUSPECTED",
               score: 0.92,
@@ -50,6 +50,13 @@ export async function POST(request: Request) {
           },
         });
       }
+
+      if (data && data.person_id && data.person_id !== "no_match") {
+        data.status = "recognized";
+      } else if (data && (!data.person_id || data.person_id === "no_match")) {
+        data.status = "unknown_face";
+      }
+
       return NextResponse.json(result.body, { status: result.status });
     }
 

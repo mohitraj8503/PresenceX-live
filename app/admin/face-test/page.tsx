@@ -519,9 +519,9 @@ export default function FaceTestPage() {
             ) : singleResult ? (
               /* Single Face Result Panel */
               (() => {
-                const isSpoof = singleResult.status === "spoof_suspected" || singleResult.liveness?.status === "SPOOF_SUSPECTED";
-                const isMatched = !isSpoof && singleResult.status === "recognized" && Boolean(singleResult.person_id);
-                const isNoFace = !isSpoof && (singleResult.status === "no_face_detected" || (!isMatched && singleResult.person_id === null));
+                const isSpoof = singleResult.status === "spoof_suspected" || singleResult.liveness?.status === "SPOOF_SUSPECTED" || singleResult.error === "spoof_detected" || singleResult.error === "screen_replay_attack";
+                const isMatched = !isSpoof && Boolean(singleResult.person_id) && singleResult.person_id !== "no_match" && singleResult.person_id !== "unrecognized" && singleResult.person_id !== "none";
+                const isNoFace = !isSpoof && (singleResult.status === "no_face_detected" || singleResult.error === "no_face_detected" || (!isMatched && !singleResult.person_id));
 
                 let badgeText = "✓ CONFIRMED MATCH";
                 let badgeBg = "#ecfdf5";
