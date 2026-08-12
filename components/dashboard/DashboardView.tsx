@@ -1100,7 +1100,7 @@ export default function DashboardView({ mode }: DashboardViewProps) {
             </div>
           ) : (
             <>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "1.5rem" }}>
                 {visibleProfiles.map((person) => {
                   const isFaculty = person.role === "faculty";
                   return (
@@ -1162,14 +1162,14 @@ export default function DashboardView({ mode }: DashboardViewProps) {
                           </div>
                         </div>
 
-                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.35rem", flexShrink: 0 }}>
                           <span
                             style={{
-                              padding: "0.3rem 0.8rem",
+                              padding: "0.25rem 0.75rem",
                               borderRadius: "6.25rem",
                               backgroundColor: isFaculty ? "#fffbeb" : "#ecfdf5",
                               color: isFaculty ? "#d97706" : "#059669",
-                              fontSize: "0.8rem",
+                              fontSize: "0.75rem",
                               fontWeight: 700,
                               textTransform: "capitalize",
                             }}
@@ -1180,7 +1180,7 @@ export default function DashboardView({ mode }: DashboardViewProps) {
                             onClick={() => handleDeleteProfile(person.person_id, person.full_name)}
                             title="Delete Profile"
                             style={{
-                              padding: "0.3rem 0.65rem",
+                              padding: "0.2rem 0.55rem",
                               borderRadius: "6.25rem",
                               backgroundColor: "#fef2f2",
                               color: "#dc2626",
@@ -1190,7 +1190,7 @@ export default function DashboardView({ mode }: DashboardViewProps) {
                               cursor: "pointer",
                               display: "inline-flex",
                               alignItems: "center",
-                              gap: "0.25rem",
+                              gap: "0.2rem",
                             }}
                           >
                             🗑️ Delete
