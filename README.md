@@ -251,3 +251,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser:
 Built with ❤️ by [Mohit Raj](https://github.com/mohitraj8503)
 
 </div>
+
+---
+
+Built by [Mohit Raj](https://github.com/mohitraj8503) — Technical Team Lead @ [Tech Tomorrow](https://techtomorrow.in)
