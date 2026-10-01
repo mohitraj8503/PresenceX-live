@@ -1,0 +1,15 @@
+<svg width="160" height="28" viewBox="0 0 160 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- ICON: OPTION 2 - Orbital X -->
+  <g id="logo-icon">
+    <!-- Slanted ellipse 1 -->
+    <ellipse cx="14" cy="14" rx="10" ry="3.5" transform="rotate(-30 14 14)" stroke="#1554D1" stroke-width="2"/>
+    <!-- Slanted ellipse 2 -->
+    <ellipse cx="14" cy="14" rx="10" ry="3.5" transform="rotate(30 14 14)" stroke="#0F172A" stroke-width="2"/>
+    <!-- Central tracking node -->
+    <circle cx="14" cy="14" r="3.5" fill="#1554D1"/>
+  </g>
+  
+  <!-- WORDMARK -->
+  <text x="36" y="20" font-family="'Poppins', 'Inter', sans-serif" font-size="16" font-weight="700" fill="#0F172A" letter-spacing="-0.5">Presence</text>
+  <text x="110" y="20" font-family="'Poppins', 'Inter', sans-serif" font-size="16" font-weight="800" fill="#1554D1" letter-spacing="-0.5">X</text>
+</svg>

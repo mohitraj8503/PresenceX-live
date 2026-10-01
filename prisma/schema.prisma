@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Organization {
+  id                 String              @id @default(cuid())
+  name               String
+  plan               String              @default("FREE_TRIAL")
+  createdAt          DateTime            @default(now())
+  faceProfiles       FaceProfile[]
+  attendanceSessions AttendanceSession[]
+}
+
+model FaceProfile {
+  id                 String       @id @default(uuid())
+  organizationId     String
+  organization       Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  personId           String
+  fullName           String
+  role               String       @default("student")
+  photoUrl           String?
+  verificationMethod String       @default("RETINAFACE")
+  qualityScore       Int?         @default(90)
+  createdAt          DateTime     @default(now())
+
+  @@unique([organizationId, personId])
+}
+
+model AttendanceSession {
+  id             String             @id @default(cuid())
+  organizationId String
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  sessionName    String
+  startedBy      String             @default("organization_admin")
+  isActive       Boolean            @default(true)
+  startedAt      DateTime           @default(now())
+  endedAt        DateTime?
+  totalMarked    Int                @default(0)
+  records        AttendanceRecord[]
+}
+
+model AttendanceRecord {
+  id         String            @id @default(uuid())
+  sessionId  String
+  session    AttendanceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  personId   String
+  confidence Float             @default(95.0)
+  distance   Float?            @default(0.28)
+  markedAt   DateTime          @default(now())
+
+  @@unique([sessionId, personId])
+}

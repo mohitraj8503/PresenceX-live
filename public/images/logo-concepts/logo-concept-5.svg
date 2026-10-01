@@ -1,0 +1,21 @@
+<svg width="160" height="28" viewBox="0 0 160 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- ICON: OPTION 5 - Radar & Presence Nodes -->
+  <g id="logo-icon">
+    <!-- Radar crosshair grid -->
+    <line x1="14" y1="4" x2="14" y2="24" stroke="#0F172A" stroke-width="1" stroke-dasharray="2 2" opacity="0.3"/>
+    <line x1="4" y1="14" x2="24" y2="14" stroke="#0F172A" stroke-width="1" stroke-dasharray="2 2" opacity="0.3"/>
+    <!-- Radar sweep arcs forming an X shape -->
+    <path d="M7 7C10.5 10.5 10.5 10.5 10.5 10.5" stroke="#1554D1" stroke-width="3" stroke-linecap="round"/>
+    <path d="M21 7C17.5 10.5 17.5 10.5 17.5 10.5" stroke="#1554D1" stroke-width="3" stroke-linecap="round"/>
+    <path d="M7 21C10.5 17.5 10.5 17.5 10.5 17.5" stroke="#1554D1" stroke-width="3" stroke-linecap="round"/>
+    <path d="M21 21C17.5 17.5 17.5 17.5 17.5 17.5" stroke="#1554D1" stroke-width="3" stroke-linecap="round"/>
+    <!-- Center scanning target circle -->
+    <circle cx="14" cy="14" r="5" stroke="#1554D1" stroke-width="1.5" stroke-dasharray="2 1"/>
+    <!-- Center scan ping dot -->
+    <circle cx="14" cy="14" r="1.5" fill="#0F172A"/>
+  </g>
+  
+  <!-- WORDMARK -->
+  <text x="36" y="20" font-family="'Poppins', 'Inter', sans-serif" font-size="16" font-weight="700" fill="#0F172A" letter-spacing="-0.5">Presence</text>
+  <text x="110" y="20" font-family="'Poppins', 'Inter', sans-serif" font-size="16" font-weight="800" fill="#1554D1" letter-spacing="-0.5">X</text>
+</svg>

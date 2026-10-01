@@ -1,0 +1,112 @@
+@import "./css/presencex.shared.css";
+
+
+.cta-button-wrap {
+  left: 100% !important;
+  margin-left: 2.5vw !important;
+}
+
+.cta-text {
+  font-size: 7.5vw !important;
+}
+
+@media screen and (min-width: 1440px) {
+  .cta-text {
+    font-size: 6.5rem !important;
+  }
+}
+
+/* Fix navbar z-index to always stay on top of the scroll animation capsule */
+.navbar {
+  z-index: 100000 !important;
+}
+
+/* Prevent the banner capsule from getting stuck in an oversized overlapping state when scrolling back up */
+@media screen and (min-width: 992px) {
+  .banner-sticky-wrap {
+    z-index: 5;
+  }
+}
+
+
+/* Enable hardware acceleration for smooth scroll animation without getting stuck */
+.after-banner-wrapper,
+.after-banner-inner,
+.banner-letter-o,
+.banner-bg-image,
+.banner-sticky-wrap {
+  will-change: transform, width, height, border-radius, opacity;
+  backface-visibility: hidden;
+}
+
+/* Adjust top padding so that the 'Attendance Powered by...' text header is fully visible and not cut off at the top */
+.after-banner-wrap {
+  padding-top: 12.25rem !important;
+}
+
+.after-banner-content-wrap {
+  margin-top: 7rem !important;
+}
+
+.after-banner-title {
+  margin-bottom: 0.75rem !important;
+}
+
+.after-banner-details {
+  margin-bottom: 1.25rem !important;
+}
+
+/* Fluid scaling for ticker text: automatically shrinks font-size when viewport narrows or zooms */
+.after-banner-ticker-text {
+  font-size: clamp(2.5rem, 6.5vw, 7rem) !important;
+}
+
+/* Optimizations for 125% zoom and smaller screen layouts */
+@media screen and (max-width: 1440px) {
+  .after-banner-title {
+    font-size: 2.25rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+  
+  .after-banner-details {
+    font-size: 0.9rem !important;
+    margin-bottom: 0.3rem !important;
+  }
+  
+  .after-banner-content-wrap {
+    margin-top: 6rem !important;
+  }
+  
+  .after-banner-ticker-text {
+    font-size: clamp(1rem, 2.8vw, 1.85rem) !important;
+  }
+}
+
+/* Optimizations for 150% zoom and compact screens */
+@media screen and (max-width: 1200px) {
+  .after-banner-title {
+    font-size: 2.75rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+  
+  .after-banner-details {
+    font-size: 0.9rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .after-banner-content-wrap {
+    margin-top: 4.5rem !important;
+  }
+  
+  .after-banner-ticker-text {
+    font-size: clamp(1.75rem, 5vw, 3.75rem) !important;
+  }
+}
+
+/* Move the letter 'V' in 'VISION' 1px closer to the 'I' */
+.banner-letter._01 {
+  margin-right: calc(1.5rem - 1px) !important;
+}
+
+
+

@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+pgvector
+psycopg2-binary
+numpy
+opencv-python-headless
+pillow
+torch
+torchvision
+facenet-pytorch
+tqdm
+pydantic
+pydantic-settings
+python-dotenv
+python-multipart
