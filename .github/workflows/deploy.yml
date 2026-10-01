@@ -4,14 +4,14 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  deploy:
-    name: Deploy to Production VPS
+  lint-and-build:
+    name: Lint & Build Check
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -19,27 +19,30 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install & Run Lint/Build Check
-        run: |
-          npm ci
-          npm run lint
-          npm run build
+      - name: Install Dependencies
+        run: npm ci
 
-      - name: Deploy to VPS via SSH
+      - name: Run Lint
+        run: npm run lint
+
+      - name: Run Production Build Validation
+        run: npm run build
+
+  deploy-to-vps:
+    name: Deploy to Production Hostinger VPS
+    needs: lint-and-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute Remote Deployment via SSH
         uses: appleboy/ssh-action@v1.0.3
-        if: ${{ env.VPS_HOST != '' }}
-        env:
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_USERNAME: ${{ secrets.VPS_USERNAME }}
-          VPS_KEY: ${{ secrets.VPS_SSH_KEY }}
-          VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
         with:
           host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
+          username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
+          script_stop: true
+          envs: VPS_APP_DIR
           script: |
-            cd /var/www/presencex || (mkdir -p /var/www && cd /var/www && git clone https://github.com/mohitraj8503/PresenceX-live.git presencex && cd presencex)
-            git pull origin main
-            docker compose up -d --build
-            docker system prune -f
+            export VPS_APP_DIR="${{ secrets.VPS_APP_DIR || '/opt/presencex' }}"
+            chmod +x "${VPS_APP_DIR}/scripts/"*.sh 2>/dev/null || true
+            bash "${VPS_APP_DIR}/scripts/deploy.sh"

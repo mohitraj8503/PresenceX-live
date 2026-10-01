@@ -19,10 +19,18 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# local env files
+# env files
 .env
 .env.local
 .env*.local
+.env.production
+import.env
+presencex.env
+env.txt
+
+# export and backup files containing real data
+presencex-local-export.json
+backups/
 
 # vercel
 .vercel
