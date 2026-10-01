@@ -116,7 +116,7 @@ export default function AdminRegisterPage() {
         } else if (json.error === "multiple_faces_detected") {
           setErrorMessage("Multiple faces detected. Only one person should be visible during enrollment. Please ask others to move out of the camera frame.");
         } else if (json.error === "FACE_ENGINE_UNAVAILABLE" || res.status === 503) {
-          setErrorMessage("Face Engine service is offline (http://127.0.0.1:8001). Please start the face engine and try again.");
+          setErrorMessage("Face Recognition AI Engine service is currently offline or unreachable. Please check backend service status.");
         } else if (json.error === "DATABASE_UNAVAILABLE" || json.message?.includes("Connection refused")) {
           setErrorMessage("PostgreSQL is not running. Start the PresenceX PostgreSQL service and try again.");
         } else {

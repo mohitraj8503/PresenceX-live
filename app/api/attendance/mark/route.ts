@@ -16,7 +16,8 @@ export async function POST(request: Request) {
     // Proxy securely to recognize-and-mark if image is attached
     const imageFile = formData.get("image");
     if (imageFile) {
-      const markReq = new Request("http://localhost/api/attendance/recognize-and-mark", {
+      const targetUrl = new URL("/api/attendance/recognize-and-mark", request.url).href;
+      const markReq = new Request(targetUrl, {
         method: "POST",
         body: formData,
       });

@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:export": "npx tsx scripts/export-local-db.ts",
+    "db:import": "npx tsx scripts/import-production-db.ts",
+    "migrate:preview": "npx tsx scripts/migrate-local-to-neon.ts --preview",
+    "migrate:production": "npx tsx scripts/migrate-local-to-neon.ts --production"
   },
   "dependencies": {
     "@prisma/client": "^7.9.1",

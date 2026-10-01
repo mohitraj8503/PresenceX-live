@@ -49,7 +49,7 @@ export async function POST(request: Request) {
               : errorMsg === "face_quality_too_low"
               ? "Face image quality is too low. Turn on a light and move closer."
               : errorMsg === "FACE_ENGINE_UNAVAILABLE"
-              ? "Face Engine service is offline (http://127.0.0.1:8001)."
+              ? "Face Engine service is offline or unreachable."
               : (result.body as Record<string, unknown>)?.message as string || "Face recognition service unavailable.",
         },
         { status }

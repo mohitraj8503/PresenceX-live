@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: presencex-face-engine
+    env: python
+    region: singapore
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: FACE_MATCH_THRESHOLD
+        value: "0.45"
+      - key: FACE_MODEL_NAME
+        value: "InceptionResnetV1_VGGFace2"
+      - key: PYTHON_VERSION
+        value: "3.11.9"
